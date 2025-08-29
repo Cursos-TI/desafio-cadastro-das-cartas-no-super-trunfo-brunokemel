@@ -51,6 +51,10 @@ int main() {
     printf("PIB: %.2f bilhoes\n", carta1.pib);
     printf("N de pontos turisticos: %d\n", carta1.NPT);
 
+    printf("Densidade populacional da carta e: %.2f hab/km\n", carta1.populacao / carta1.area);
+    printf("PIB per capita da carta e: %2.f R$/hab\n", (carta1.pib * 1e9) / carta1.populacao);
+    // printf("Densidade populacional da carta e: %.2f hab/km²\n", carta1.populacao / carta1.area);
+
     printf("\n");
 
     printf("Carta: %s\n", carta2.carta);
@@ -62,6 +66,12 @@ int main() {
     printf("PIB: %.2f bilhoes\n", carta2.pib);
     printf("N de pontos turisticos: %d\n", carta2.NPT);
 
+    printf("Densidade populacional da carta e: %.2f hab/km\n", carta2.populacao / carta2.area);
+    printf("PIB per capita da carta e: %2.f R$/hab\n", (carta2.pib * 1e9) / carta2.populacao);
+   
+    //  printf("Densidade populacional da carta e: %.2f hab/km²\n", carta2.populacao / carta2.area);
+    
+    
     
         
     // Sugestão: Utilize a função scanf para capturar as entradas do usuário para cada atributo.
