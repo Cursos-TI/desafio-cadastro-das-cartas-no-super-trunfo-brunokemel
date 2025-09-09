@@ -107,7 +107,7 @@ void compararCartas(struct CartaSuperTrunfo carta1, struct CartaSuperTrunfo cart
         case 5: // Densidade
             if (compararMenor(carta1.densidade, carta2.densidade)) {
                 printf("Carta 1 vence na densidade populacional!\n");
-            } else if (compararMaior(carta2.densidade, carta1.densidade)) {
+            } else if (compararMenor(carta2.densidade, carta1.densidade)) {
                 printf("Carta 2 vence na densidade populacional!\n");
             } else{
                 printf("Empate na densidade populacional!\n");
