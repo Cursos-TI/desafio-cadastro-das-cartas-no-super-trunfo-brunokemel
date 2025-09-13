@@ -29,25 +29,18 @@ struct CartaSuperTrunfo  {
 };
 
 //funcao comparador
-int compararMaior(float v1, float v2) {
-    return v1 > v2 ? 1 : 0; // 1 = Carta 1 vence, 0 = Carta 2 vence
-}
-
-int compararMenor(float v1, float v2) {
-    return v1 < v2 ? 1 : 0; // 1 = Carta 1 vence, 0 = Carta 2 vence
+int comparar(float v1, float v2, int maiorVence) {
+    return maiorVence
+        ? (v1 > v2 ? 1 :(v1 < v2 ? -1 : 0))  // quando maior vence
+        : (v1 < v2 ? 1 :(v1 > v2 ? -1 : 0)); // quando menor vence
 }
 
 //funcoes auxiliares
 void calcularAtributos(struct CartaSuperTrunfo *c){
     c->densidade = (float)c->populacao / c->area;
-    c->superPoder = c->pib / c->populacao;
-    c->superPoder = c->populacao 
-                
-            + c->area 
-            + c->pib 
-            + c->NPT 
-            + c->pibPercapita 
-            + (1.0f / c->densidade);
+    c->pibPercapita = c->pib / c->populacao;
+    c->superPoder = c->populacao + c->area + c->pib + c->NPT + c->pibPercapita + (1.0f / c->densidade);
+
 };
 
 // Função para imprimir a carta
@@ -66,65 +59,36 @@ void imprimirCarta(struct CartaSuperTrunfo carta) {
 // funcao para comparar cartas
 // usando void com swuitch case para comparar os atributos
 // legibilidade organizacao do codigo substitui if else convencional
-void compararCartas(struct CartaSuperTrunfo carta1, struct CartaSuperTrunfo carta2, int escolha) {
-    switch(escolha) {
-        case 1: // Populacao
-            if (compararMaior(carta1.populacao, carta2.populacao)) {
-                printf("Carta 1 vence na populacao!\n");
-            } else if (compararMaior(carta2.populacao, carta1.populacao)){
-                printf("Carta 2 vence na populacao!\n");
-            } else {
-                printf("Empate na populacao!\n");
-            }
-            break;
-        case 2: // Area
-            if (compararMaior(carta1.area, carta2.area)) {
-                printf("Carta 1 vence na area!\n");
-            } else if (compararMaior(carta2.area, carta1.area)) {
-                printf("Carta 2 vence na area!\n");
-            } else{
-                printf("Empate na area!\n");
-            }
-            break;
-        case 3: // PIB
-            if (compararMaior(carta1.pib, carta2.pib)) {
-                printf("Carta 1 vence no PIB!\n");
-            } else if (compararMaior(carta2.pib, carta1.pib)) {
-                printf("Carta 2 vence no PIB!\n");
-            } else{
-                printf("Empate no PIB!\n");
-            }
-            break;
-        case 4: // NPT
-            if (compararMaior(carta1.NPT, carta2.NPT)) {
-                printf("Carta 1 vence nos pontos turisticos!\n");
-            } else if (compararMaior(carta2.NPT, carta1.NPT)) {
-                printf("Carta 2 vence nos pontos turisticos!\n");
-            } else{
-                printf("Empate nos pontos turisticos!\n");
-            }
-            break;
-        case 5: // Densidade
-            if (compararMenor(carta1.densidade, carta2.densidade)) {
-                printf("Carta 1 vence na densidade populacional!\n");
-            } else if (compararMenor(carta2.densidade, carta1.densidade)) {
-                printf("Carta 2 vence na densidade populacional!\n");
-            } else{
-                printf("Empate na densidade populacional!\n");
-            }
-            break;
-        case 6: // PIB per Capita
-            if (compararMaior(carta1.pibPercapita, carta2.pibPercapita)) {
-                printf("Carta 1 vence no PIB per capita!\n");
-            } else if (compararMaior(carta2.pibPercapita, carta1.pibPercapita)) {
-                printf("Carta 2 vence no PIB per capita!\n");
-            } else {
-                printf("Empate no PIB per capita!\n");
-            }
-            break;
-        default:
-            printf("Escolha invalida!\n");
+void compararCartas(struct CartaSuperTrunfo c1, struct CartaSuperTrunfo c2, int escolha1, int escolha2) {
+    int resultado = 0;
+   // Primeiro atributo
+    switch(escolha1) {
+        case 1: resultado = comparar(c1.populacao, c2.populacao, 1); break;
+        case 2: resultado = comparar(c1.area, c2.area, 1); break;
+        case 3: resultado = comparar(c1.pib, c2.pib, 1); break;
+        case 4: resultado = comparar(c1.NPT, c2.NPT, 1); break;
+        case 5: resultado = comparar(c1.densidade, c2.densidade, 0); break;
+        case 6: resultado = comparar(c1.pibPercapita, c2.pibPercapita, 1); break;
+        default: resultado = 0;
     }
+
+    // Desempate com segundo atributo
+    if(resultado == 0) {
+        switch(escolha2) {
+            case 1: resultado = comparar(c1.populacao, c2.populacao, 1); break;
+            case 2: resultado = comparar(c1.area, c2.area, 1); break;
+            case 3: resultado = comparar(c1.pib, c2.pib, 1); break;
+            case 4: resultado = comparar(c1.NPT, c2.NPT, 1); break;
+            case 5: resultado = comparar(c1.densidade, c2.densidade, 0); break;
+            case 6: resultado = comparar(c1.pibPercapita, c2.pibPercapita, 1); break;
+            default: resultado = 0;
+        }
+    }
+
+    // Resultado final
+    if(resultado == 1) printf("Carta 1 (%s) vence!\n", c1.cidade);
+    else if(resultado == -1) printf("Carta 2 (%s) vence!\n", c2.cidade);
+    else printf("Empate!\n");
 }
 
 
@@ -152,7 +116,7 @@ int main() {
 
 
       // Menu interativo
-    int opcao;
+    int escolha1, escolha2;
     printf("\n=== MENU DE COMPARACAO ===\n");
     printf("1 - Populacao\n");
     printf("2 - Area\n");
@@ -160,11 +124,12 @@ int main() {
     printf("4 - Pontos Turisticos\n");
     printf("5 - Densidade Populacional\n");
     printf("6 - PIB per Capita\n");
-    printf("Escolha o atributo para comparar: ");
-    scanf("%d", &opcao);
-
+    printf("Escolha o atributo PRINCIPAL: \n");
+    scanf("%d", &escolha1);
+    printf("Escolha o atributo SECUNDARIO: \n");
+    scanf("%d", &escolha2);
     // Compara cartas com base na escolha do usuario
-    compararCartas(carta1, carta2, opcao);
+    compararCartas(carta1, carta2, escolha1, escolha2);
 
         
     // Sugestão: Utilize a função scanf para capturar as entradas do usuário para cada atributo.
